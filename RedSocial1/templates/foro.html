@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Foro</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body class="bg-light">
+    <div class="container py-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow mb-4">
+                    <div class="card-body d-flex align-items-center">
+                        <img src="{{ foro.icono or '/static/default.png' }}" class="rounded me-3" width="64" height="64">
+                        <div>
+                            <h3 class="mb-0">{{ foro.titulo }}</h3>
+                            <small class="text-muted">{{ foro.tematica }}</small>
+                        </div>
+                        <a href="/home" class="btn btn-outline-secondary ms-auto me-2">Volver</a>
+                        <a href="/foro_chat/{{ foro.id }}" class="btn btn-primary">Ir al chat del foro 💬</a>
+                    </div>
+                </div>
+                <div class="card shadow mb-4">
+                    <div class="card-body">
+                        <form method="post" enctype="multipart/form-data">
+                            <div class="mb-3">
+                                <textarea name="texto" class="form-control" placeholder="¿Qué quieres publicar en este foro?" required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <button class="btn btn-outline-secondary dropdown-toggle w-100" type="button" data-bs-toggle="collapse" data-bs-target="#opcionesAdjunto" aria-expanded="false" aria-controls="opcionesAdjunto">
+                                    Adjuntar...
+                                </button>
+                                <div class="collapse mt-2" id="opcionesAdjunto">
+                                    <div class="d-flex flex-column gap-2">
+                                        <input type="file" name="imagen" accept="image/*" class="form-control" placeholder="Subir imagen">
+                                        <input type="file" name="archivo" class="form-control" placeholder="Subir archivo">
+                                        <input type="url" name="enlace" class="form-control" placeholder="Pegar enlace">
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Publicar</button>
+                        </form>
+                    </div>
+                </div>
+                {% for post in posts[::-1] %}
+                {% set post_idx = posts|length - loop.index %}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-2">
+                            <img src="{{ users[post.user_id].profile_pic or '/static/default.png' }}" class="rounded-circle me-2" width="48" height="48">
+                            <div>
+                                <strong>{{ users[post.user_id].username }}</strong><br>
+                                <small class="text-muted">{{ post.fecha }}</small>
+                            </div>
+                            {% if user.id == post.user_id %}
+                            <form method="post" action="/foro_eliminar_post/{{ foro.id }}/{{ loop.revindex0 }}" class="ms-auto">
+                                <button type="submit" class="btn btn-sm btn-danger ms-2">🗑️</button>
+                            </form>
+                            <a href="/foro_editar_post/{{ foro.id }}/{{ loop.revindex0 }}" class="btn btn-sm btn-outline-secondary ms-2">✏️</a>
+                            {% endif %}
+                        </div>
+                        <p class="mb-2">{{ post.texto }}</p>
+                        {% if post.imagen %}
+                            <img src="{{ post.imagen }}" class="img-fluid rounded mb-2" style="max-height:300px;">
+                        {% endif %}
+                        {% if post.archivo %}
+                            <a href="{{ post.archivo }}" target="_blank" class="btn btn-link">Descargar archivo</a>
+                        {% endif %}
+                        {% if post.enlace %}
+                            <a href="{{ post.enlace }}" target="_blank" class="btn btn-link">Ver enlace</a>
+                        {% endif %}
+                        <div class="d-flex align-items-center mt-2">
+                            <form method="post" action="/foro_like/{{ foro.id }}/{{ loop.revindex0 }}" class="me-2">
+                                <button type="submit" class="btn btn-outline-danger">
+                                    ❤️ {{ post.likes|default(0) }}
+                                </button>
+                            </form>
+                        </div>
+                        <hr>
+                        <h6>Comentarios</h6>
+                        <ul class="list-unstyled">
+                            {% for c in post.comentarios %}
+                            <li class="mb-2">
+                                <div class="d-flex align-items-center">
+                                    <img src="{{ users[c.user_id].profile_pic or '/static/default.png' }}" class="rounded-circle me-2" width="32" height="32">
+                                    <div>
+                                        <strong>{{ users[c.user_id].username }}</strong><br>
+                                        <small class="text-muted">{{ c.fecha }}</small>
+                                    </div>
+                                    {% if user.id == post.user_id or user.id == c.user_id %}
+                                    <form method="post" action="/foro_eliminar_comentario/{{ foro.id }}/{{ post_idx }}/{{ loop.index0 }}" class="ms-2">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Eliminar comentario">🗑️</button>
+                                    </form>
+                                    {% endif %}
+                                    {% if user.id == c.user_id %}
+                                    <a href="/foro_editar_comentario/{{ foro.id }}/{{ post_idx }}/{{ loop.index0 }}" class="btn btn-sm btn-outline-secondary ms-2" title="Editar mi comentario">✏️</a>
+                                    {% endif %}
+                                </div>
+                                <div class="ms-5">{{ c.comentario }}</div>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        <form method="post" action="/foro_comentar/{{ foro.id }}/{{ post_idx }}">
+                            <div class="input-group">
+                                <input type="text" name="comentario" class="form-control" placeholder="Comentar..." required>
+                                <button class="btn btn-outline-primary" type="submit">Comentar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

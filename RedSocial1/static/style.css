@@ -1,0 +1,171 @@
+body { font-family: Arial, sans-serif; background: #f0f2f5; }
+h1 { color: #333; }
+button { margin: 10px; padding: 10px 20px; }
+.card {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  border-radius: 12px;
+}
+.bg-light {
+  background: #f8f9fa !important;
+}
+textarea.form-control {
+  min-height: 80px;
+}
+img.rounded-circle {
+  object-fit: cover;
+  border: 2px solid #e0e0e0;
+}
+.profile-card-responsive {
+  width: 100%;
+  max-width: 500px;
+}
+.profile-img-responsive {
+  width: 64px;
+  height: 64px;
+}
+@media (max-width: 768px) {
+  .col-md-3, .col-md-6 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+  .container-fluid {
+    padding: 0;
+  }
+  .col-md-3 {
+    order: 1 !important;
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 1rem;
+  }
+  .col-md-6 {
+    order: 3 !important;
+  }
+  .col-md-3 .btn-danger {
+    margin-top: 1rem;
+  }
+  .profile-card-responsive {
+    max-width: 98vw;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 16px;
+  }
+  .profile-img-responsive {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 8px;
+  }
+  .profile-card-responsive .card-body {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 0.5rem;
+    padding: 1.2rem 0.5rem !important;
+  }
+  .profile-img-responsive {
+    margin-bottom: 0.5rem;
+    margin-right: 0 !important;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .profile-card-responsive .d-flex.align-items-center.flex-grow-1.min-width-0 {
+    flex-direction: column !important;
+    align-items: center !important;
+    min-width: 0 !important;
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+  .profile-card-responsive .d-flex.align-items-center.gap-2.mt-3.mt-md-0 {
+    justify-content: center !important;
+    margin-top: 0.5rem !important;
+    width: 100%;
+  }
+  .profile-card-responsive .min-width-0 {
+    width: 100%;
+    text-align: center;
+  }
+  .profile-card-responsive .card-body {
+    padding-left: 0.7rem !important;
+    padding-right: 0.7rem !important;
+  }
+  .profile-card-responsive {
+    max-width: 98vw;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .profile-card-responsive .card-body {
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding-left: 0.7rem !important;
+    padding-right: 0.7rem !important;
+    gap: 0 !important;
+  }
+  .profile-img-responsive {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 0;
+    margin-right: 0.7rem !important;
+  }
+  .profile-card-responsive .d-flex.align-items-center.flex-grow-1.min-width-0 {
+    flex-direction: row !important;
+    align-items: center !important;
+    min-width: 0 !important;
+    width: auto;
+    margin-bottom: 0;
+  }
+  .profile-card-responsive .min-width-0 {
+    width: auto;
+    text-align: left;
+  }
+  .profile-card-responsive .d-flex.align-items-center.gap-2.mt-3.mt-md-0 {
+    margin-top: 0 !important;
+    gap: 0.5rem !important;
+    justify-content: flex-end !important;
+    width: auto;
+  }
+  .profile-card-responsive .card-body {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    padding: 1rem 1.2rem;
+  }
+  .profile-card-userinfo {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+  }
+  .profile-card-userinfo .profile-img-responsive {
+    width: 64px;
+    height: 64px;
+    margin-right: 0.7rem;
+  }
+  .profile-card-userinfo .min-width-0 {
+    min-width: 0;
+  }
+  .profile-card-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-left: 1.5rem;
+  }
+}
+@media (max-width: 768px) {
+  .profile-card-responsive {
+    max-width: 98vw;
+  }
+  .profile-card-responsive .card-body {
+    padding: 0.7rem 0.4rem;
+  }
+  .profile-card-userinfo .profile-img-responsive {
+    width: 48px;
+    height: 48px;
+    margin-right: 0.5rem;
+  }
+  .profile-card-actions {
+    margin-left: 0.5rem;
+  }
+}

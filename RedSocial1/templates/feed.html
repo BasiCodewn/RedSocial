@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Feed - Red Social</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row min-vh-100">
+        <!-- Columna izquierda -->
+        <div class="col-md-3 d-flex flex-column align-items-center bg-light pt-4 pt-md-0 order-1 order-md-1">
+            <div class="w-100 d-flex flex-column align-items-center mb-4">
+                <a href="/profile">
+                    <img src="{{ user.profile_pic or '/static/default.png' }}" class="rounded-circle mb-2" width="80" height="80" style="cursor:pointer;">
+                </a>
+                <a href="/profile" style="text-decoration:none;color:inherit;"><h5>{{ user.username }}</h5></a>
+                <a href="/chat" class="btn btn-outline-primary w-75 my-3">Ir al chat/foro</a>
+                <a href="/logout" class="btn btn-danger w-75">Cerrar sesión</a>
+            </div>
+        </div>
+        <!-- Columna central -->
+        <div class="col-md-6 py-4 order-3 order-md-2">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <textarea name="texto" class="form-control" placeholder="¿Qué estás pensando?" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <button class="btn btn-outline-secondary dropdown-toggle w-100" type="button" data-bs-toggle="collapse" data-bs-target="#opcionesAdjunto" aria-expanded="false" aria-controls="opcionesAdjunto">
+                                Adjuntar...
+                            </button>
+                            <div class="collapse mt-2" id="opcionesAdjunto">
+                                <div class="d-flex flex-column gap-2">
+                                    <input type="file" name="imagen" accept="image/*" class="form-control" placeholder="Subir imagen">
+                                    <input type="file" name="archivo" class="form-control" placeholder="Subir archivo">
+                                    <input type="url" name="enlace" class="form-control" placeholder="Pegar enlace">
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Publicar</button>
+                    </form>
+                </div>
+            </div>
+            {% for post in posts[::-1] %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-2">
+                        <img src="{{ users[post.user_id].profile_pic or '/static/default.png' }}" class="rounded-circle me-2" width="48" height="48">
+                        <div>
+                            <strong>{{ users[post.user_id].username }}</strong><br>
+                            <small class="text-muted">{{ post.fecha }}</small>
+                        </div>
+                        {% if user.id == post.user_id %}
+                        <form method="post" action="/eliminar_post/{{ loop.revindex0 }}" class="ms-auto">
+                            <button type="submit" class="btn btn-sm btn-danger ms-2" style="float:right;">🗑️</button>
+                        </form>
+                        {% endif %}
+                    </div>
+                    <p class="mb-2">{{ post.texto }}</p>
+                    {% if post.imagen %}
+                        <img src="{{ post.imagen }}" class="img-fluid rounded mb-2" style="max-height:300px;">
+                    {% endif %}
+                    {% if post.archivo %}
+                        <a href="{{ post.archivo }}" target="_blank" class="btn btn-link">Descargar archivo</a>
+                    {% endif %}
+                    {% if post.enlace %}
+                        <a href="{{ post.enlace }}" target="_blank" class="btn btn-link">Ver enlace</a>
+                    {% endif %}
+                    <div class="d-flex align-items-center mt-2">
+                        <form method="post" action="/like/{{ loop.revindex0 }}" class="me-2">
+                            <button type="submit" class="btn btn-outline-danger">
+                                ❤️ {{ post.likes|default(0) }}
+                            </button>
+                        </form>
+                    </div>
+                    <hr>
+                    <h6>Comentarios</h6>
+                    <ul class="list-unstyled">
+                        {% for c in post.comentarios %}
+                        <li class="mb-2">
+                            <div class="d-flex align-items-center">
+                                <img src="{{ users[c.user_id].profile_pic or '/static/default.png' }}" class="rounded-circle me-2" width="32" height="32">
+                                <div>
+                                    <strong>{{ users[c.user_id].username }}</strong><br>
+                                    <small class="text-muted">{{ c.fecha }}</small>
+                                </div>
+                                {% if user.id == post.user_id and c.user_id != user.id %}
+                                <form method="post" action="/eliminar_comentario/{{ loop.parent.revindex0 }}/{{ loop.index0 }}" class="ms-2">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Eliminar comentario">🗑️</button>
+                                </form>
+                                {% endif %}
+                                {% if user.id == c.user_id %}
+                                <form method="post" action="/eliminar_comentario/{{ loop.parent.revindex0 }}/{{ loop.index0 }}" class="ms-2">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Eliminar mi comentario">🗑️</button>
+                                </form>
+                                <a href="/editar_comentario/{{ loop.parent.revindex0 }}/{{ loop.index0 }}" class="btn btn-sm btn-outline-secondary ms-2" title="Editar mi comentario">✏️</a>
+                                {% endif %}
+                            </div>
+                            <div class="ms-5">{{ c.comentario }}</div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    <form method="post" action="/comentar/{{ loop.revindex0 }}">
+                        <div class="input-group">
+                            <input type="text" name="comentario" class="form-control" placeholder="Comentar..." required>
+                            <button class="btn btn-outline-primary" type="submit">Comentar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <!-- Columna derecha -->
+        <div class="col-md-3 bg-light d-none d-md-flex flex-column align-items-center pt-4 order-2 order-md-3">
+            <!-- Espacio para futuro contenido -->
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Botón de ir arriba -->
+<button id="btnArriba" title="Ir arriba" style="display:none;position:fixed;bottom:30px;right:30px;z-index:9999;" class="btn btn-primary rounded-circle fs-3">⬆️</button>
+<script>
+// Mostrar/ocultar botón
+window.onscroll = function() {
+    document.getElementById('btnArriba').style.display = (window.scrollY > 200) ? 'block' : 'none';
+};
+// Ir arriba
+const btn = document.getElementById('btnArriba');
+if(btn) {
+    btn.onclick = function() {
+        window.scrollTo({top:0, behavior:'smooth'});
+    };
+}
+</script>
+</body>
+</html>

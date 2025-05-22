@@ -1,0 +1,28 @@
+[
+  {
+    "user_id": 1,
+    "texto": "Hola, soy nuevo en el foro xd",
+    "fecha": "21/05/2025 18:02",
+    "comentarios": [],
+    "imagen": "/static/2042f8df-caa9-487e-a29b-387e34ebf50a_Blue_Modern_Insurance_Retractable_Banner_3.png",
+    "archivo": null,
+    "enlace": null,
+    "likes": 5
+  },
+  {
+    "user_id": 1,
+    "texto": "Hola, soy Wilde Garcia y este es mi foro",
+    "fecha": "21/05/2025 23:23",
+    "comentarios": [
+      {
+        "user_id": 1,
+        "comentario": "a",
+        "fecha": "22/05/2025 08:46"
+      }
+    ],
+    "imagen": null,
+    "archivo": null,
+    "enlace": null,
+    "likes": 1
+  }
+]
